@@ -93,6 +93,7 @@
     "CONFIRM": {
       "TITLE": "Confirmar exclusão",
       "MESSAGE": "Tem certeza que deseja excluir esta nota?",
+      "WARNING": "Antes de excluir o contato, resolva todas as conversas abertas relacionadas a ele!",
       "YES": "Sim, exclua",
       "NO": "Não, mantenha"
     }

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'dashboard/composables/store';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -21,6 +21,11 @@ const store = useStore();
 const route = useRoute();
 
 const dialogRef = ref(null);
+const errorDialogRef = ref(null);
+
+// Adicione esta computed para verificar o papel do usuário
+const currentRole = computed(() => store.getters.getCurrentRole);
+const isAdmin = computed(() => currentRole.value === 'administrator');
 
 const deleteContact = async id => {
   if (!id) return;
@@ -34,6 +39,12 @@ const deleteContact = async id => {
 };
 
 const handleDialogConfirm = async () => {
+  if (!isAdmin.value) {
+    dialogRef.value?.close();
+    errorDialogRef.value?.open();
+    return;
+  }
+
   emit('goToContactsList');
   await deleteContact(route.params.contactId || props.selectedContact.id);
   dialogRef.value?.close();
@@ -54,5 +65,28 @@ defineExpose({ dialogRef });
     "
     :confirm-button-label="t('CONTACTS_LAYOUT.DETAILS.DELETE_DIALOG.CONFIRM')"
     @confirm="handleDialogConfirm"
+  >
+    <div 
+      class="warning-message"
+      :style="{
+        backgroundColor: '#665417',
+        padding: '12px',
+        borderRadius: '4px',
+        border: '1px solid rgba(0, 0, 0, 0.1)',
+        marginTop: '8px',
+        color: 'white'
+      }"
+    >
+    Antes de excluir o contato, resolva todas as conversas abertas relacionadas a ele!
+    </div>
+  </Dialog>
+
+  <!-- Novo diálogo para erro de permissão -->
+  <Dialog
+    ref="errorDialogRef"
+    type="alert"
+    title="Permissão necessária"
+    description="Somente administradores podem excluir contatos. Não foi possível excluir o contato."
+    confirm-button-label="OK"
   />
 </template>
