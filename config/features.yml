@@ -94,3 +94,6 @@
   premium: true
 - name: chatwoot_v4
   enabled: false
+- name: kanban
+  enabled: true
+  premium: false

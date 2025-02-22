@@ -18,6 +18,7 @@ import WidgetBuilder from './WidgetBuilder.vue';
 import BotConfiguration from './components/BotConfiguration.vue';
 import { FEATURE_FLAGS } from '../../../../featureFlags';
 import SenderNameExamplePreview from './components/SenderNameExamplePreview.vue';
+import WhatsappAPI from './settingsPage/WhatsappAPI.vue';
 
 export default {
   components: {
@@ -34,6 +35,7 @@ export default {
     SenderNameExamplePreview,
     MicrosoftReauthorize,
     GoogleReauthorize,
+    WhatsappAPI,
   },
   mixins: [inboxMixin],
   setup() {
@@ -112,6 +114,16 @@ export default {
           {
             key: 'widgetBuilder',
             name: this.$t('INBOX_MGMT.TABS.WIDGET_BUILDER'),
+          },
+        ];
+      }
+
+      if (this.isAPIInbox) {
+        visibleToAllChannelTabs = [
+          ...visibleToAllChannelTabs,
+          {
+            key: 'WhatsappAPI',
+            name: this.$t('Whatsapp API'),
           },
         ];
       }
@@ -782,6 +794,9 @@ export default {
     </div>
     <div v-if="selectedTabKey === 'botConfiguration'">
       <BotConfiguration :inbox="inbox" />
+    </div>
+    <div v-if="selectedTabKey === 'WhatsappAPI'">
+      <WhatsappAPI :inbox="inbox" />
     </div>
   </div>
 </template>
